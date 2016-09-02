@@ -84,10 +84,84 @@ PyQt5的实现被视作Python的一个模块。它由300多个类和接近6000�
 		
 		#设置文件信息
 		self.setToolTip("this is a <b>Qwidget<b> widget")
+		#设置字体
 		#QtWidgets.QToolTip.setFont(QtGui.QFont("Times", 10))
 
 	app = QtWidgets.QApplication(sys.argv)
 	tooltip = Tooltip()
 	tooltip = show()
 	sys.exit(app.exec_())
+
+### 2.4关闭窗口
+自定义关闭按钮。简要介绍Qt的信号和槽机制
+下面是QPushButton的构造函数，我们将会在下面的示例中使用它
+
+	QPushButton(string text, QWidget parent = None)
+
+text表示将显示在按钮上的文本。parent是其对象，用于指定按钮显示在哪个部件中。在我们的实例中。parent是一个Qwidget对象.
+
+	#-*- coding:utf-8 -*-
+	"""用按钮关闭程序"""
+	import sys
+	from PyQt5 import QtWidgets, QtCore, QtGui
 	
+	class QuitButton(QtWidgets.QWidget):
+		def __init__(self, parent=None):
+			QtWidgets.QWidget.__init__(self, parent)
+			
+			self.setGeometry(300, 300, 250, 150)
+			self.setWindowTitle("我的关闭程序")
+			#实例化按钮对象，传入父级对象
+			quit_button = QtWidgets.QPushButton("关闭", self)
+			#设置按钮位置
+			quit_button.setGeometry(10, 10, 60,35)
+			#绑定点击事件
+			#PyQt5的时间处理系统建立在信号-槽机制之上。如果我们单击quit按钮，那么信号clicked就会被触发。槽函数可以是PyQt自带的槽函数，也可以是任何Python可以调用的函数。QtCore.QObject.connect()方法可以将信号和槽函数链接起来。在我们的示例中槽函数是PyQt中已定义的quit()函数。通过connect方法就可以建立发送者（quit按钮）和接收者（应用程序对象）之间的通信
+			quit_button.clicked.connect(QtWidgets.qApp.quit)
+
+	app = QtWidgets.QApplication(sys.argv)
+	quitbutton = QuitButton()
+	quitbutton.show()
+	sys.exit(app.exec_())
+	
+	
+PyQt4和PyQt5的调用区别
+	
+	# pyqt5中的做法
+	quit_button.clicked.connect(QtWidgets.qApp.quit)
+	# pyqt4中的做法  
+	self.connect(quit,QtCore.SIGNAL('clicked()'),QtGui.qApp,QtCore.SLOT('quit()'))
+
+>[官方文档-信号和槽](http://pyqt.sourceforge.net/Docs/PyQt5/signals_slots.html)
+
+
+###2.5 消息窗口
+
+默认情况下，如果我们点击了窗口标题栏上的X标记，窗口就会被关闭。但是有时候我们想要改变这一默认行为。比如，我们正在编辑的文件内容发生了变化，这时若单击X标记关闭窗口，编辑器应当弹出确认窗口。
+
+	#-*- coding:utf-8 -*-
+	"""消息窗口示例"""
+	import sys
+	from PyQt5 import QtWidgets, QtGui, QtCore
+	
+	class MessageBox(QtWidgets.Qwidget):
+		def __init__(self, parent=None):
+			QtWidgets.QWidget.__init__(self, parent)
+			self.setGeometry(300, 300, 250, 150)
+			self.setWindowTitle("消息窗口演示程序")
+		
+		#重写关闭事件
+		def closeEvent(self, event):
+			replay = QtWidgets.QMessageBox.question(self, '确认推出','你确定要推出么？',QtWidgets.QMessageBox.Yes, QtWidgets.QMessageBox.No)
+			
+			if replay == QtWidgets.QmessageBox.Yes:
+				event.accept()
+			else:
+				event.ignore()
+
+	app = QtWidgets.QApplication(sys.argv)
+	qb = MessageBox()
+	qb.show()
+	sys.exit(app.exec_())
+
+###2.6将窗口放在屏幕中心
