@@ -165,3 +165,22 @@ PyQt4和PyQt5的调用区别
 	sys.exit(app.exec_())
 
 ###2.6将窗口放在屏幕中心
+
+以下脚本展示了将窗口放在屏幕中间的位置方法
+
+	#-*- coding: utf-8 -*-
+	"""窗口置中"""
+	import sys
+	import PyQt5 import QtWidgets
+	
+	class Center(QtWidgets.QWidget):
+		def __init__(self, parent=None):
+			QtWidgets.QWidget.__init__(self, parent)
+			self.setWindowTitle("窗口置中程序")
+			self.resize(250, 150)
+			self.center()
+
+		def center(self):
+			screen = QtWidgets.QDesktopWidget().screenGeometry()
+			size = self.geometry()
+			self.move((screen.width()- size.width())/2, (screen.height())
