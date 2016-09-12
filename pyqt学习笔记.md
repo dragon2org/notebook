@@ -1,12 +1,16 @@
-#PyQt学习日记
+# PyQt学习日记
 >参考资料 http://bbs.fishc.com/thread-59816-1-1.html
+
 
 1.关于PyQt
 PyQt是用来创建GUI应用程序的工具包。它是Python编程语言与已获得成功的Qt库的混合体。其中Qt库是这个星球上最强大的GUI库之一。
 
 PyQt5的实现被视作Python的一个模块。它由300多个类和接近6000个函数有方法构成。作为一个跨平台的工具包，PyQt可以在所有主流的操作系统（Unix、Window、Mac）上运行。PyQt有两种许可，开发者可以在GPL和商业许可证之间做出选择。
 
-###PyQt4结构和介绍
+
+## PyQt4结构和介绍 ##
+
+
 - QtCire模块包含了核心的非GUI功能函数，用于处理一下方面：日期、文件和目录、数据结构、URL、MIME、线程和进程。
 - QtGUI模块包含了绘图组件以及绘图相关的类，比如按钮、窗口、状态栏、工具栏、滑块、位图、颜色、字体等。
 - QtNetWork模块包含用于网络编程的类，用户可以用这些类实现TCP/IP和UDP的客户端或服务器。并且使用这些类会使网络编程更容易，轻便。
@@ -17,7 +21,7 @@ PyQt5的实现被视作Python的一个模块。它由300多个类和接近6000�
 >PyQt5中。模块结构有所改变，PyQt4中的QtGui模块在PyQt5中分为了GtGUI，QtPrintSuport,QtWidgets三个模块。
 >PyQt4中的QtOpenGL模块中，只有QGLContext,QGLFormat和QGLWidget这三个类还可以在PyQt5中使用。
 
-##2.1初次使用
+### 2.1初次使用 ###
 &nbsp;&nbsp;&nbsp;&nbsp;这段代码非常简单，它的作用只是显示一个小小的窗口，然而你可以对这个窗口作很多事情。我们可以改变窗口的尺寸。最大化，最小化窗口。为了实现这些功能，我们需要编写大量的代码。但是，已经有人将这些实现这些功能的代码写好了，因为这些操作在很多程序中都是重复出现的，没有必要一次此的重新写这些代码，所以这些代码想PyQt的使用者隐藏了。PyQt是一种高层的工具集，如果我们用更底层的工具，以下的是示例代码将会超过几十行。
 
 	# -*-coding: utf-8 -*-
@@ -42,7 +46,7 @@ PyQt5的实现被视作Python的一个模块。它由300多个类和接近6000�
 	sys.exit(app.exec_()) 
 
 
-##2.2设置程序图标
+### 2.2设置程序图标 ###
 程序图标就是一个小图片，通常显示在程序标题栏的左上角。
 
 	# -*- coding: utf-8 -*-
@@ -67,7 +71,7 @@ PyQt5的实现被视作Python的一个模块。它由300多个类和接近6000�
 	sys.exit(app.exec_())
 
 
-###2.3显示提示信息
+### 2.3显示提示信息 ###
 
 我们可以为任何窗口部件设置一个悬停提示。
 
@@ -92,7 +96,7 @@ PyQt5的实现被视作Python的一个模块。它由300多个类和接近6000�
 	tooltip = show()
 	sys.exit(app.exec_())
 
-### 2.4关闭窗口
+### 2.4关闭窗口 ###
 自定义关闭按钮。简要介绍Qt的信号和槽机制
 下面是QPushButton的构造函数，我们将会在下面的示例中使用它
 
@@ -135,7 +139,7 @@ PyQt4和PyQt5的调用区别
 >[官方文档-信号和槽](http://pyqt.sourceforge.net/Docs/PyQt5/signals_slots.html)
 
 
-###2.5 消息窗口
+### 2.5 消息窗口 ###
 
 默认情况下，如果我们点击了窗口标题栏上的X标记，窗口就会被关闭。但是有时候我们想要改变这一默认行为。比如，我们正在编辑的文件内容发生了变化，这时若单击X标记关闭窗口，编辑器应当弹出确认窗口。
 
@@ -164,14 +168,14 @@ PyQt4和PyQt5的调用区别
 	qb.show()
 	sys.exit(app.exec_())
 
-###2.6将窗口放在屏幕中心
+### 2.6将窗口放在屏幕中心 ###
 
 以下脚本展示了将窗口放在屏幕中间的位置方法
 
 	#-*- coding: utf-8 -*-
 	"""窗口置中"""
 	import sys
-	import PyQt5 import QtWidgets
+	from PyQt5 import QtWidgets
 	
 	class Center(QtWidgets.QWidget):
 		def __init__(self, parent=None):
@@ -183,4 +187,194 @@ PyQt4和PyQt5的调用区别
 		def center(self):
 			screen = QtWidgets.QDesktopWidget().screenGeometry()
 			size = self.geometry()
-			self.move((screen.width()- size.width())/2, (screen.height())
+			self.move((screen.width()- size.width())/2, (screen.height()- size.height()/2)
+
+	app = QtWidgets.QApplication(sys.argv)
+	center = Center()
+	center.show()
+	sys.exit(app.exec_())
+
+## 3.PyQt5中的菜单和工具栏 ##
+
+### 3.1主窗口 ###
+
+QMainWindow 类用来创建应用程序的主窗口。 通过该类，我们可以创建一个包含状态栏、工具栏和菜单的景点应用程序框架。
+
+### 3.2 状态栏 ###
+
+状态栏是用来显示状态信息的串口部件。
+
+
+	# -*- coding: utf-8 -*-
+	"""状态栏程序"""
+	import sys
+	from PyQt5 import QtWidgets
+	
+	class MainWindow(QtWidgets.QMainWindow):
+		def __init__(self):
+			#调用父类的构造方法
+			super(MainWindow, self).__init__()
+			
+			self.resize(250, 150)
+			self.setWindowTitle("状态栏程序示例")
+			#设置状态栏
+			self.statusBar().showMessage("就绪")
+
+	app = QtWidgets.QApplication(sys.argv)
+	main_winodw = MainWindow()
+	main_window.show()
+	sys.exit(app.exec_())
+
+### 3.3菜单栏 ###
+
+菜单栏是GUI程序最明显的组成部分。它由一组位于不同菜单中的命令组成。在控制台程序中，我们必须记住那些晦涩难懂的命令。但在GUI程序中，通过菜单栏我们将命令合理的放置在不同的菜单中来降低学习新应用程序的时间开销。
+
+	# -*- coding: utf-8 -*-
+	"""菜单栏"""
+	import sys
+	from PyQt5 import QtWidgets, QtGui
+	
+	class MainWindow(QtWidgets.QMainWindow):
+		def __init__(self):
+			super(MainWindow, self).__init__()
+			
+			self.resize(250, 160)
+			self.setWindowTitle("菜单比例")
+			
+			#设置菜单项
+			exit_menu = QtWidgets.QAction(QtGui.QIcon(r"1.ico", "退出", self)
+			#设置文本备注-一般用于显示快捷键。空格应该要转义
+			exit_menu.setShortcut("Ctr+Q")
+			exit_menu.triggered.connect(QtWidgets.qApp.quit)
+
+			self.statusBar()
+			
+			menubar = self.menuBar()
+			#添加一个菜单
+			file = munubar.addMenu("文件")
+			#添加事件
+			file.addAction(exit_menu)
+
+	app = QtWidgets.QApplication(sys.argv)
+	mainwindow = MainWindow()
+	mainwindow.show()
+	sys.exit(app.exec_())
+
+### 3.4 一个综合的例子 ###
+
+在本章的最后一个示例中，我们将创建一个菜单栏、一个工具栏和一个状态栏。我们还会创建一个中心部件。
+
+	# -*- coding: utf-8 -*-
+	"""我的程序"""
+	import sys
+	from PyQt5 import QtWidgets, QtGui
+
+	class MainWindow(QtWidgets.QMainWindow):
+		def __init__(self):
+			supert(MainWindow, self).__init__()
+
+			self.resize(350, 250)
+			self.setWindowTitle("我的程序")
+			#创建文本编辑器控件
+			text_edit = QtWidgets(text_edit)
+			#设置为中心部件。中心部件将占满窗口空间
+			self.setCentralWidget(text_edit)
+			
+			exit_action = QtWidgets.QAction(QtGui.QIcon(r"sample.png", "退出", self)
+			exit_action.setStatusTip("退出程序")
+			exit_action.setShortcut("Ctrl+Q")
+			exit_action.triggered.connect(QtWidgets.qApp.quit)
+				
+			self.statusBar()
+			
+			self.menu_bar = self.menuBar()
+			file = self.menu_bar.addMenu("文件")
+			file.addAction(exit_action)
+			
+			self.toolbar = self.addToolBar("退出")
+			self.toolbar.addAction(exit_action)
+
+	app = QtWidgets.QAppliaction(sys.argv)
+	main_window = MainWindow()
+	main_window.shwo()
+	sys.exit(app.exec_())
+
+## 4.PyQt5中的布局管理 ##
+
+布局管理器是编程中重要的一部分。所谓布局管理是指我们在窗口中安排部件位置的方法。布局管理有两种工作方式：绝对定位方式（absolute positioning)和布局类别方式(layout classes)
+
+### 4.1 绝对定位方式 ###
+该方式下。程序员编程制定每一个不见得位置和像素。当使用绝对定位方式时。需要注意一下几点:
+* 改变窗口大小时，窗口中部件的大小和位置不会随之改变。
+* 在不同平台上，应用程序可能看起来不尽相同
+* 在应用程序中改变字体可能会导致布局混乱
+* 如果你打算改变窗口布局，你就必须得重新书写所有的部件布局，这一工作非非常的乏味且耗时较多。
+
+
+
+		# -*- coding:utf-8 -*-
+		"""绝对定位演示"""
+
+		import sys
+		from PyQt5 import QtWidgets, QtGui
+	
+		class MainWindow(QtWidgets.QMainWindow):
+		def __init__(self):
+			super(MainWindow, self).__init__()
+			
+			self.setWindowTitle("绝对定位演示程序")
+			self.resize(250, 150)
+			
+			#使用move x y设置 QLable 部件位置。坐标原点为左上角顶点。
+			QtWidgets.QLable('Couldn\'t', self).move(15, 10)
+			QtWidgets.QLable('care', self).move(35, 40)
+			QtWidgets.QLable('less', self).move(55, 65)
+			QtWidgets.QLable('and' , self).move(115, 65)
+			QtWidgets.QLable('then', self).move(135, 45)
+			QtWidgets.QLable('you', self).move(115, 25)
+			QtWidgets.QLable('kiss', self).move(145, 10)
+			QtWidgets.QLable('me', self).move(215, 10)
+
+		app = QtWidgets.QApplication(sys.argv)
+		main_window = MainWindow()
+		main_window.shwo()
+		sys.exit(app.exec_())
+
+### 4.2 Box布局 ###
+使用布局类别的方式的布局管理比决定定位的布局管理更加灵活实用。它是窗口部件的首先布局管理方式。最基本的布局类别是QHBoxLayout和QVBoxLayout布局管理方式。分别将窗口部件水平和垂直排列。
+
+假设我们要将两个按钮放在窗口的右下角。为创建该布局。我们需要使用一个水平Box和一个垂直的Box,另外为了创建鼻血的空间，我们还需要添加一个伸缩间隔的元素（stretch factor)
+
+		#-*- coding:utf-8 -*-
+		"""Box定位演示"""
+		
+		import sys
+		from PyQt5 import QtWidgets
+			
+		class BoxLayout(QtWidgets.QWidget):
+			def __init__(self):
+				super(BoxLayout).__init__()
+
+			self.setWindowTitle("Box定位演示程序")
+			
+			self.ok_button = QtWidgets.QPushButton("确定")
+			self.cancel_button = QtWidgets.QPushButton("取消")
+
+			self.h_box = QtWidgets.QHBoxLayout()
+			self.h_box.addStretch(1)
+			self.h_box.addWidget(self.ok_button)
+			self.h_box.addWidget(self.cancel_button)
+			
+			self.v_box = QtWidgets.QVBoxLayout()
+			self.v_box.addStretch(1)
+			self.v_box.addLayout(self.h_box)
+			
+			self.setLayout(self.v_box)
+			self.resize(300, 150)
+		
+		app = QtWidgets.QAppliaction(sys.argv)
+		box_layout = BoxLayout()
+		box_layout.show()
+		sys.exit(app.exec_())
+
+
