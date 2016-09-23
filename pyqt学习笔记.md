@@ -353,7 +353,7 @@ QMainWindow 类用来创建应用程序的主窗口。 通过该类，我们可�
 			
 		class BoxLayout(QtWidgets.QWidget):
 			def __init__(self):
-				super(BoxLayout).__init__()
+				super(BoxLayout, self).__init__()
 
 			self.setWindowTitle("Box定位演示程序")
 			
