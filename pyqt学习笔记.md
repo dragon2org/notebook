@@ -340,6 +340,8 @@ QMainWindow 类用来创建应用程序的主窗口。 通过该类，我们可�
 		main_window.shwo()
 		sys.exit(app.exec_())
 
+
+
 ### 4.2 Box布局 ###
 使用布局类别的方式的布局管理比决定定位的布局管理更加灵活实用。它是窗口部件的首先布局管理方式。最基本的布局类别是QHBoxLayout和QVBoxLayout布局管理方式。分别将窗口部件水平和垂直排列。
 
@@ -377,4 +379,94 @@ QMainWindow 类用来创建应用程序的主窗口。 通过该类，我们可�
 		box_layout.show()
 		sys.exit(app.exec_())
 
+
+### 4.3网格布局
+
+最通用的布局类别是网格布局（QGridLayout)。该布局方式将窗口空间划分为许多行和列。要创建该布局方式，我们需要使用QGridLayout类。
+
+	# -*- coding: utf-8 -*-
+	"""网格布局示例"""
+	
+	import sys
+	from PyQt5 import QtWidgets
+	
+	class GridLayout(QtWidgets.QMainWindow):
+		def __init__(self):
+			super(GridLayout, self).__init__()
+		
+			self.setWindowTitle("网格布局演示程序")
+        	buttton_names = ['Cls', 'Bck', '', 'Close',
+                         '7', '8', '9', '/',
+                         '4', '5', '6', '*',
+                         '1', '2', '3', '-',
+                         '0', '.', '=', '+']
+			#创建一组网格布局按钮的实例main_ground,然后setCentraWidget方法将它置为中心部件
+			main_ground = QtWidgets.QWidget()
+			self.setCentraWidget(main_ground)
+			gird = QtWidgets.QGridLayout()
+			#创建一个网格布局
+			for [n, (x, y)] in enumerate([(i, j) for i in range(5) for j in range(4)]):
+	            if (x, y) == (0, 2):
+	                grid.addWidget(QtWidgets.QLabel(buttton_names[n]), x, y)
+	            else:
+	                grid.addWidget(QtWidgets.QPushButton(buttton_names[n]), x, y)
+			#将网格布局用setLayout方法置于之前创建好的main_ground实例上
+			main_ground.setLayout(grid)
+	
+	app = QtWidgets.QApplication(sys.argv)
+	grid_layout = GridLayout()
+	grid_layout.show()
+	sys.exit(app.exec_())
+
+在这个示例中，我们创建一组网格布局的按钮。为了填补Bak 和 Close 按钮之间的空白，我们使用QLabel部件。
+
+部件在网格布局中可以跨越多行或多列。我们将下面的示例中演示该情况。
+
+	# -*- coding: utf-8 -*-
+	"""网格布局跨行示例"""
+	
+	import sys
+	from PyQt5 import QtWidgets
+
+	class GridLayout(QtWidgets.QMainWindow):
+		def __init__(self):
+			super(GridLayout, self).__init__()
+			
+			self.setWindowTitle("网格跨越多行示例")
+			
+			main_ground = QtWidgets.QWidget()
+			self.setCentralWidgets(main_groud)
+			
+			#创建网格布局，并将该布局中的部件间隔设为20个字距
+			grid = QtWidgets.QGridLayout()
+			grid.setSpacing(20)
+
+			grid.addWidget(QtWidgets.QLabel("标题:", 1, 0)
+			grid.addWidget(QtWidgets.QLineEdit(), 1, 1)
+			grid.addWidget(QtWidgets.QLabel("作者：", 2, 0)
+			grid.addWidget(QtWidgets.QLineEdit(), 2, 1)
+			grid.addWidget(QtWidgets.QLable("评论:", 3, 0)
+			#设置Edit部件的行跨度为5，列跨度为1
+			grid.addWidget(QtWidgets.QTextEdit(), 3, 1, 5, 1)
+			
+			main_groud.setLayout(grid)
+			self.resize(350, 300)
+
+	app = QtWidgets.QAppliaction(sys.argv)
+	grid_layout = GridLayout()
+	grid_layout.show()
+	sys.exit(app.exec_())
+
+## 5. PyQt5的事件和信号。
+
+在本章学习中。我们将介绍发生在应用程序中的事件和信号。
+### 5.1 事件
+
+事件（events)是GUI程序中很重要的一部分。它是由用户或系统产生。当我们调用程序的exec_()方法时，程序就会进入主循环中。主循环捕获事件并将它们发送给相应的对象进行处理。为此。引入了一种独一无二的处理模式：信号与槽机制。
+
+### 5.2 信号槽 ###
+
+当用户点击一个按钮，拖动一个滑块或进行其他动作时，相应的信号就会被发射。除此之外，信号还可以因为环境的变化而被发射。比如一个运动的时钟就会发射间隔时间信号等。而所谓的槽则时一个方法，该方法将会响应它所连接的信号。在Python中。槽可以时任何可以被调用的对象。
+	
+			
 
