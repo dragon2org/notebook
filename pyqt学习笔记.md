@@ -468,5 +468,149 @@ QMainWindow 类用来创建应用程序的主窗口。 通过该类，我们可�
 
 当用户点击一个按钮，拖动一个滑块或进行其他动作时，相应的信号就会被发射。除此之外，信号还可以因为环境的变化而被发射。比如一个运动的时钟就会发射间隔时间信号等。而所谓的槽则时一个方法，该方法将会响应它所连接的信号。在Python中。槽可以时任何可以被调用的对象。
 	
-			
 
+	# -*- coding: utf-8 -*-
+	"""信号槽示例"""
+	
+	import sys
+	from PyQt5 import QtWidgets, QtCore
+
+	class SignalSlot(QtWidgets.QWidget):
+		def __init__(self):
+			supert(SignalSlot, self).__init__()
+			
+			self.setWindowTitle("信号槽演示程序")
+			#创建一个LCD显示器和一个滑块。
+			lcd = QtWidgets.QLCDNumber(self)
+			
+			#创建滑块
+			slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
+			
+			v_box = QtWidgets.QVBoxLayout()
+			v_box.addWidget(lcd)
+			v_box.addWidget(slider)
+			
+			self.setLayout(v_box)
+			# emit.signal.connect(accept.slot)
+			# 如果信号发送对象为emit。要发射的信号是signal.信号接收者对象accept,对信号做出响应的槽函数slot
+			slider.valueChanged.connect(lcd.display)
+			self.resize(250, 150)
+
+	app = QtWidgets.QAppliaction(sys.argv)
+	qb = SignalSlot()
+	qb.show()
+	sys.exit(app.exec_())
+
+
+### 5.3 重写事件的处理方法 ###
+PyQt中的事件处理主要依赖重写事件处理函数来实现
+
+
+	# -*- coding: utf-8 -*-
+	"""用Esc键推出示例"""
+	import sys
+	from PyQt5 import QtWidgets, QtCore
+
+	class Escape(QtWidgets.QWidget):
+		def __init__(self):
+			super(Escape, self).__init__()
+			
+			self.setWindowTitle("Esc退出演示程序")
+			self.resize(250, 150)
+		
+		def keyPressEvent(self, event):
+			# 如果按下esc,则关闭当前窗口
+			if event.key() == QtCore.Qt.Key_Escape:
+				self.close()
+
+
+	app = QtWidgets.QApplication(sys.argv)
+	escape = Escape()
+	escape.show()
+	sys.exit(app.exec_())
+
+
+### 5.4 发射信号 ###
+
+通过QtCore.QObject创建的对象可以发射信号。如果我们点击按钮，就会生成一个clicked()信号。在以下的例子里我们看到如何发射一个信号。
+
+	# -*- coding: utf-8 -*-
+	"""发射信号示例"""
+	import sys
+	from PyQt5 import QtWidgets, QtCore
+
+	class EmitSignal(QtWidgets.QWidget):
+		#创建一个叫做closeEmitApp的信号。
+		closeEmitApp = QtCore.pyqtSignal()
+		
+		def __init__(self):
+			super(EmitSignal, self).__init__()
+			
+			self.setWindowTitle("发射信号演示程序")
+			self.resize(250, 150)
+			
+			self.closeEmitApp.Connect(self.close)
+		
+		def mousePressEvent(self, QMousetEvent):
+			#通过信号变量emit()方法发射一个信号
+			self.closeEmitApp.emit()
+
+	app = QtWidgets.QAppliaction(sys.argv)
+	es = EmitSignal()
+	es.show()
+	sys.exit(app.exec_())
+
+
+## 6 PyQt5中的对话框 ##
+
+对话窗口和对话框是现代GUI应用程序必不可少的一部分。生活中“对话”被定义为发生在两个人或更多人之间的会话。而在计算机世界，“对话”则是人与程序之间的“会话”。人机对话的形式有在输入框内建如内容，修改已有数据，改变应用程序的设置等。
+对话框在人机交互中扮演着非常重要的角色。
+从本质上说。只存在两种形式对话框：预定义对话框和定制对话框。
+
+### 6.1 QInputDialog输入对话框 ###
+
+	# -*- coding: utf-8 -*-
+	"""输入对话框示例"""
+	import sys
+	from PyQt5 import QtWidgets, QtCore
+
+	class InputDialog(QtWidgets.QWidget):
+		def __init__(self):
+			super(InputDialog, self).__init__()
+			
+			self.setWindowTitle("输入对话框演示程序")
+			self.setGeometry(300, 300, 350, 80)
+			self.button = QtWidgets.QPushButton("对话框”, self)
+			self.button.move(20, 20)
+			self.button.clicked.connect(self.show_dialog)
+			self.setFocus()
+			
+			self.label = QtWidgets.QLineEdit(self)
+			self.label.move(130, 22)
+		
+		def show_dialog(self)
+			text, ok = QtWidgets.QInputDialog.getText(self, "输入对话框", "请输入你的名字"）
+			if ok:
+				self.label.setText(text)
+
+	app = QtWidgets.QApplication(sys.argv)
+	input_dialog = InputDialog()
+	input_dialog.show()
+	sys.exit(app.exec_())
+
+
+### 6.2 QColorDialog 颜色对话框
+
+QcolorDialog提供了用于选择颜色的对话框
+
+	# -*- coding: utg-8 -*-
+	"""颜色对话框示例"""
+	import sys
+	from PyQt5 import QtWidgets, QtGui, QtCore
+	
+	class ColorDialog(QtWidgets.QWidget):
+		def __init__(self):
+			super(ColorDialog, self).__init__()
+			
+			self.setWindowTitle("颜色对话框演示程序")
+			
